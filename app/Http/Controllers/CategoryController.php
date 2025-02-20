@@ -2,30 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = [
-            [
-                "id" => 1,
-                "name" => "Food"
-            ],
-            [
-                "id" => 2,
-                "name" => "Drinks"
-            ],
-            [
-                "id" => 3,
-                "name" => "Health"
-            ],
-            [
-                "id" => 4,
-                "name" => "Care"
-            ]
-        ];
+        $categories = Category::all();
         return view("category.index", compact("categories"));
+    }
+
+    public function show($id) {
+        $category = Category::find($id);
+        return view("category.show", compact("category"));
     }
 }

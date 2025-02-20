@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -47,6 +48,13 @@ Route::prefix("/dashboard")->group(function() {
 //     return view("category.index");
 // });
 
-Route::get("/categories", [CategoryController::class, "index"]);
 
 Route::get("/articles", [ArticleController::class, "index"]);
+
+Route::get("/categories", [CategoryController::class, "index"])->name("category.list");
+
+Route::get("/categories/{id}", [CategoryController::class, "show"]) -> name("category.show");
+
+Route::get("/products", [ProductController::class, "index"])->name("product.index");
+
+Route::get("/products/{id}", [ProductController::class, "detail"])->name("product.detail");
