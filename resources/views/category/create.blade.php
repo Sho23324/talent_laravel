@@ -7,8 +7,11 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Product Details</h1>
-    <p>name : {{$product['name']}} <br> Description :  {{$product['description']}} <br> Price : {{$product['price']}}</p>
-    <a href="{{route("products.index")}}">Back</a>
+    <h1>Create Category Name</h1>
+    <form action="{{route('category.store')}}" method="POST">
+        @csrf
+        <input type="text" name="name" placeholder="Enter Category Name">
+        <button class="submit">Create</button>
+    </form>
 </body>
 </html>
