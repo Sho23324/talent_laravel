@@ -7,8 +7,11 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Product Details</h1>
-    <p>name : {{$product['name']}} <br> Description :  {{$product['description']}} <br> Price : {{$product['price']}}</p>
-    <a href="{{route("products.index")}}">Back</a>
+    <h1>Edit</h1>
+    <form action="{{route('category.update' ,['id' => $category['id']])}}" method="POST">
+        @csrf
+        <input type="text" name="name" value="{{$category['name']}}">
+        <button type="submit">Update</button>
+    </form>
 </body>
 </html>
