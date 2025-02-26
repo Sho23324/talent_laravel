@@ -1,22 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List</title>
-</head>
-<body>
-    <h1>Category List</h1>
-    <a href="{{route('category.create')}}">+Create</a>
-    @foreach ($categories as $data)
-    <p>{{$data['id']}} : {{$data['name']}}</p>
-    <a href="{{route("category.show", ['id' => $data['id']])}}">Show</a>
-    <a href="{{route('category.edit', ['id'=>$data['id']])}}">Edit</a>
+@extends('category.home')
 
-    <form action="{{route('category.delete', ['id' => $data['id']])}}" method="POST">
-        @csrf
-        <button type="submit">Delete</button>
-    </form>
-    @endforeach
-</body>
-</html>
+@section('content')
+<div class="container mt-3">
+    <h1>Category List</h1>
+    <a href="{{route('category.create')}}" class="btn btn-outline-primary mt-4 mb-4 fw-bold">
+        <i class="fa-solid fa-square-plus"></i> Create Category
+    </a>
+    <table class="table border text-center table-striped">
+        <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>ACTION</th>
+        </tr>
+        @foreach($categories as $data)
+        <tr>
+            <td>{{$data['id']}}</td>
+            <td>{{$data['name']}}</td>
+            <td>
+                <a href="{{route('category.show', ['id'=>$data['id']])}}" class="btn btn-outline-primary" type="submit">View</a>
+                <a href="{{route('category.edit',['id'=>$data['id']] )}}" class="btn btn-outline-warning" type="submit">Edit</a>
+                <form class="d-inline" action="{{route('category.delete', ['id'=>$data['id']])}}" method="POST">
+                    @csrf
+                    <button class="btn btn-outline-danger" type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        @endforeach
+    </table>
+</div>
+@endsection

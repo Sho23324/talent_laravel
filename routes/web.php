@@ -66,7 +66,7 @@ Route::get('/products/edit/{id}', [ProductController::class, 'edit'])->name('pro
 
 Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
 
-Route::get('/products/delete/{id}', [ProductController::class, 'delete'])->name('products.delete');
+Route::post('/products/delete/{id}', [ProductController::class, 'delete'])->name('products.delete');
 
 Route::get('/products/{id}', [ProductController::class, 'detail'])->name('products.detail');
 

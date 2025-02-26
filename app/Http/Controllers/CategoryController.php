@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryCreateRequest;
 use App\Models\Category;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -17,10 +19,16 @@ class CategoryController extends Controller
         return view('category.create');
     }
 
-    public function store(Request $request) {
-        Category::create([
-            'name'=>$request->name
-        ]);
+    public function store(CategoryCreateRequest $request) {
+        $validatedData = $request->Validated();
+
+        if($request->hasFile('image')) {
+            $imageName =  time() . '.' .$request->image->extension();
+            $request->image->move(public_path('categoryImage'), $imageName);
+            $validatedData = array_merge($validatedData, ['image'=>$imageName]);
+        }
+        Category::create($validatedData);
+
         return redirect()->route('category.list');
     }
 
