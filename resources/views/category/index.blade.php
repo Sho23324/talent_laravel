@@ -10,12 +10,14 @@
         <tr>
             <th>ID</th>
             <th>NAME</th>
+            <th>IMAGE</th>
             <th>ACTION</th>
         </tr>
         @foreach($categories as $data)
         <tr>
             <td>{{$data['id']}}</td>
             <td>{{$data['name']}}</td>
+            <td><img src="{{asset('categoryImage/'.$data['image'])}}" alt="{{$data['image']}}" width="50px"></td>
             <td>
                 <a href="{{route('category.show', ['id'=>$data['id']])}}" class="btn btn-outline-primary" type="submit">View</a>
                 <a href="{{route('category.edit',['id'=>$data['id']] )}}" class="btn btn-outline-warning" type="submit">Edit</a>

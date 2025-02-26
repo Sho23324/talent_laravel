@@ -1,12 +1,3 @@
-{{--
-    <h1>Edit</h1>
-    <form action="{{route('category.update' ,['id' => $category['id']])}}" method="POST">
-        @csrf
-        <input type="text" name="name" value="{{$category['name']}}">
-        <button type="submit">Update</button>
-    </form> --}}
-
-
 @extends('category.home');
 
 @section('content')
@@ -17,8 +8,14 @@
             Update Category
         </div>
         <div class="card-body">
-            <form action="{{route('category.update' ,['id' => $category['id']])}}" method="POST">
+            <form action="{{route('category.update' ,['id' => $category['id']])}}" method="POST" enctype="multipart/form-data">
                 @csrf
+                <label for="image" class="fw-bold">Category Image : </label>
+                <img src="{{asset('categoryImage/'. $category['image'])}}" alt="image" width="60px">
+                <br>
+                <label for="image" class="fw-bold mt-4">Choose Image </label>
+                <input type="file" name="image" class="form-control mb-4"/>
+
                 <label for="name" class="fw-bold">Category Name</label>
                 <input type="text" name="name" class="form-control" value="{{$category['name']}}"/>
             </div>
