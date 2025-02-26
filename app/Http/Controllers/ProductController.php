@@ -24,6 +24,9 @@ class ProductController extends Controller
 
     public function store(ProductStoreRequest $request) {
         $validatedData = $request->validated();
+        if($request['status'] == 'active') {
+            $validatedData = array_merge($validatedData,['status'=>true]);
+        }
         Product::create($validatedData);
         return redirect()->route('products.index');
     }
@@ -39,13 +42,16 @@ class ProductController extends Controller
         return view('product.edit', ['product'=>$product]);
     }
 
-    public function update(Request $request) {
+    public function update(ProductStoreRequest $request) {
         $product = Product::find($request->id);
-        $product->update([
-            'name'=>$request->name,
-            'description'=>$request->description,
-            'price'=>$request->price
-        ]);
+        $validatedData = $request->validated();
+        if($request['status']) {
+            $validatedData = array_merge($validatedData,['status'=>true]);
+        }else {
+            $validatedData = array_merge($validatedData,['status'=>false]);
+        }
+
+        $product->update($validatedData);
         return redirect()->route('products.index');
     }
 }

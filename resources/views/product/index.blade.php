@@ -25,10 +25,10 @@
                     <td>{{$product['description']}}</td>
                     <td>{{$product['price']}}</td>
                     @if($product['status'] == true)
-                    <td>Available</td>
+                    <td class="text-success fw-bold">Available</td>
                     @endif
                     @if($product['status'] == false)
-                    <td>Unavailable</td>
+                    <td class="text-danger fw-bold">Unavailable</td>
                     @endif
                     <td>
                         <a href="{{route('products.detail', ['id'=>$product['id']])}}" class="btn btn-outline-info me-2"><i class="fa-solid fa-eye"></i></a>

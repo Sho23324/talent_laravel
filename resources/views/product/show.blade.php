@@ -20,7 +20,12 @@
                 <p>{{$product['price']}}</p>
                 <div class="form-check form-switch mt-4">
                     <label for="active" class="form-check-label">Active</label>
+                    @if($product['status'] == true)
+                    <input type="checkbox" class="form-check-input" name="status" value="active" checked>
+                    @endif
+                    @if($product['status'] == false)
                     <input type="checkbox" class="form-check-input" name="status" value="active">
+                    @endif
                 </div>
             </div>
             <div class="card-footer text-end">
