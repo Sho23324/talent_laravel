@@ -1,14 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Show</title>
-</head>
-<body>
-    <h1>Category show</h1>
-    <p>{{$category['name']}}</p>
-    <a href="{{route ("category.list")}}">Back</a>
-</body>
-</html>
+@extends('category.home')
+@section('content')
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header fw-bold bg-primary text-white">
+            Category Details
+        </div>
+        <div class="card-body">
+            <label for="name" class="fw-bold mb-2">Category Name</label>
+            <p>{{$category['name']}}</p>
+            {{-- <div class="form-check form-switch mt-4">
+                <label for="active" class="form-check-label">Active</label>
+                <input type="checkbox" class="form-check-input" name="status" value="active">
+            </div> --}}
+        </div>
+        <div class="card-footer text-end">
+            <a href="{{route('category.list')}}" type="submit" class="btn btn-outline-danger fw-bold me-2">Back</a>
+        </div>
+    </div>
+</div>
+
+@endsection
+
