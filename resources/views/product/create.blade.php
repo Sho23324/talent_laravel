@@ -8,7 +8,7 @@
             Create New Product
         </div>
         <div class="card-body">
-            <form action="{{route('products.store')}}" method="POST">
+            <form action="{{route('products.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <label for="name" class="fw-bold">Product Name</label>
                 <input type="text" name="name" class="form-control" @error('name') is-invalid @enderror placeholder="Enter Product Name" value="{{old('name')}}">
@@ -33,6 +33,23 @@
                     *{{$message}}
                 </div>
                 @enderror
+                <label for="image" class="fw-bold mt-4">Choose Image : </label>
+                <input type="file" name="image" class="" @error('image')
+
+                @enderror/> <br>
+                @error('image')
+                <div class="text-danger" style="font-size: 14px">
+                    *{{$message}}
+                </div>
+                @enderror
+
+                <label for="category">Choose Category : </label>
+                <select name="category_id" id="category_id" class="mt-4">
+                    @foreach ($categories as $category)
+                    <option value="{{$category['id']}}">{{$category['name']}}</option>
+                    @endforeach
+                </select>
+
                 <div class="form-check form-switch mt-4">
                     <label for="active" class="form-check-label">Active</label>
                     <input type="checkbox" class="form-check-input" name="status" value="active">

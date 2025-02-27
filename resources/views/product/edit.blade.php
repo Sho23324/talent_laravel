@@ -17,7 +17,7 @@
             Edit Product
         </div>
         <div class="card-body">
-            <form action="{{route('products.update', ['id'=>$product['id']])}}" method="POST">
+            <form action="{{route('products.update', ['id'=>$product['id']])}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <label for="name" class="fw-bold">Product Name</label>
                 <input type="text" name="name" class="form-control" @error('name') is-invalid @enderror placeholder="Enter Product Name" value="{{$product['name']}}">
@@ -42,6 +42,20 @@
                     *{{$message}}
                 </div>
                 @enderror
+
+                <label for="image" class="fw-bold mt-4">Choose Image : </label>
+                <input type="file" name="image" class=""/> <br>
+
+                <select name="category_id" id="category_id" class="mt-4">
+                    @foreach($categories as $category)
+                    <option value="{{$category['id']}}" {{$product['category_id'] == $category['id'] ? 'selected' : ''}}>{{$category['name']}}</option>
+
+                    @endforeach
+                </select>
+                <div class="card-body fw-bold">
+                    <label for="image" class="form-label">Product Image : </label>
+                    <img src="{{asset('productImage/'.$product['image'])}}" alt="image" width="100px">
+                </div>
                 <div class="form-check form-switch mt-4">
                     <label for="active" class="form-check-label">Active</label>
                     @if($product['status'] == true)

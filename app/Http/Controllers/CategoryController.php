@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryCreateRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
+use App\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
+    private $categoryRepo;
+    public function __construct(CategoryRepositoryInterface $categoryRepo)
+    {
+        $this->categoryRepo = $categoryRepo;
+    }
     public function index()
     {
-        $categories = Category::all();
+        $categories = $this->categoryRepo->getCategories();
         return view("category.index", compact("categories"));
     }
 
@@ -27,32 +35,43 @@ class CategoryController extends Controller
             $request->image->move(public_path('categoryImage'), $imageName);
             $validatedData = array_merge($validatedData, ['image'=>$imageName]);
         }
-        Category::create($validatedData);
+        $this->categoryRepo->create($validatedData);
 
         return redirect()->route('category.list');
     }
 
     public function show($id) {
-        $category = Category::find($id);
+        $category = $this->categoryRepo->getCategoryById($id);
         return view("category.show", compact("category"));
     }
 
     public function delete($id) {
-        $category = Category::find($id);
+        $category = $this->categoryRepo->getCategoryById($id);
+        $image = public_path('categoryImage/') . $category->image;
+        Storage::delete($image);
+        unlink($image);
         $category->delete();
         return redirect()->route('category.list');
     }
 
     public function edit($id) {
-        $category = Category::find($id);
+        $category = $this->categoryRepo->getCategoryById($id);
         return view('category.edit', compact('category'));
     }
 
-    public function update(Request $request) {
-        $category = Category::find($request->id);
-        $category->update([
-            'name'=>$request->name
-        ]);
+    public function update(CategoryUpdateRequest $request) {
+        $category = $this->categoryRepo->getCategoryById($request->id);
+        $validatedData = $request->validated();
+        if($request->hasFile('image')) {
+            $oldImage =  public_path('categoryImage/'). $category->image;
+            Storage::delete($oldImage);
+            unlink($oldImage);
+            $imageName =  time() . '.' .$request->image->extension();
+            $request->image->move(public_path('categoryImage'), $imageName);
+            $validatedData = array_merge($validatedData, ['image'=>$imageName]);
+        }
+
+        $category->update($validatedData);
         return redirect()->route('category.list');
     }
 }

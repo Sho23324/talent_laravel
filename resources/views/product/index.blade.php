@@ -14,6 +14,7 @@
                     <th class="bg-primary text-white">NAME</th>
                     <th class="bg-primary text-white">DESCRIPTION</th>
                     <th class="bg-primary text-white">PRICE</th>
+                    <th class="bg-primary text-white">Image</th>
                     <th class="bg-primary text-white">STATUS</th>
                     <th class="bg-primary text-white">ACTION</th>
                 </tr>
@@ -24,6 +25,7 @@
                     <td>{{$product['name']}}</td>
                     <td>{{$product['description']}}</td>
                     <td>{{$product['price']}}</td>
+                    <td><img src="{{asset('productImage/' . $product['image'])}}" alt="image" width="60px"></td>
                     @if($product['status'] == true)
                     <td class="text-success fw-bold">Available</td>
                     @endif
