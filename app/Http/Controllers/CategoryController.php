@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryCreateRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
 use App\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Auth\Events\Validated;
@@ -58,7 +59,7 @@ class CategoryController extends Controller
         return view('category.edit', compact('category'));
     }
 
-    public function update(CategoryCreateRequest $request) {
+    public function update(CategoryUpdateRequest $request) {
         $category = $this->categoryRepo->getCategoryById($request->id);
         $validatedData = $request->validated();
         if($request->hasFile('image')) {

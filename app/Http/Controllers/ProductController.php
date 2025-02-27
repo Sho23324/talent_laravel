@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Repositories\Category\CategoryRepositoryInterface;
@@ -64,7 +65,7 @@ class ProductController extends Controller
         return view('product.edit', ['product'=>$product], compact('categories'));
     }
 
-    public function update(ProductStoreRequest $request) {
+    public function update(ProductUpdateRequest $request) {
         $product = $this->productRepo->getProductById($request->id);
 
         $validatedData = $request->validated();

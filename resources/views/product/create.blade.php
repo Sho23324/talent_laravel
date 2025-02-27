@@ -34,7 +34,14 @@
                 </div>
                 @enderror
                 <label for="image" class="fw-bold mt-4">Choose Image : </label>
-                <input type="file" name="image" class=""/> <br>
+                <input type="file" name="image" class="" @error('image')
+
+                @enderror/> <br>
+                @error('image')
+                <div class="text-danger" style="font-size: 14px">
+                    *{{$message}}
+                </div>
+                @enderror
 
                 <label for="category">Choose Category : </label>
                 <select name="category_id" id="category_id" class="mt-4">
