@@ -5,24 +5,33 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProductStoreRequest;
 use App\Models\Category;
 use App\Models\Product;
+use App\Repositories\Category\CategoryRepositoryInterface;
+use App\Repositories\Product\ProductRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    private $productRepo;
+    private $categoryRepo;
+    public function __construct(ProductRepositoryInterface $productRepo, CategoryRepositoryInterface $categoryRepo)
+    {
+        $this->productRepo = $productRepo;
+        $this->categoryRepo = $categoryRepo;
+    }
     public function index() {
-        $products = Product::all();
+        $products = $this->productRepo->getProducts();
         return view("product.index", compact("products"));
     }
 
     public function detail($id) {
-        $categories = Category::all();
-        $product = Product::find($id);
+        $categories = $this->categoryRepo->getCategories();
+        $product = $this->productRepo->getProductById($id);
         return view("product.show", compact("product"), compact('categories'));
     }
 
     public function create() {
-        $categories = Category::get();
+        $categories = $this->categoryRepo->getCategories();
         return view('product.create', compact('categories'));
     }
 
@@ -36,12 +45,12 @@ class ProductController extends Controller
             $request->image->move(public_path('productImage'), $imageName);
             $validatedData = array_merge($validatedData, ['image'=>$imageName]);
         }
-        Product::create($validatedData);
+        $this->productRepo->create($validatedData);
         return redirect()->route('products.index');
     }
 
     public function delete($id) {
-        $product = Product::find($id);
+        $product = $this->productRepo->getProductById($id);
         $image = public_path('productImage/') . $product->image;
         Storage::delete($image);
         unlink($image);
@@ -50,13 +59,13 @@ class ProductController extends Controller
     }
 
     public function edit($id) {
-        $categories = Category::all();
-        $product = Product::with('category')->where('id', $id)->first();
+        $categories = $this->categoryRepo->getCategories();
+        $product = $this->productRepo->getCategoryProduct($id);
         return view('product.edit', ['product'=>$product], compact('categories'));
     }
 
     public function update(ProductStoreRequest $request) {
-        $product = Product::find($request->id);
+        $product = $this->productRepo->getProductById($request->id);
 
         $validatedData = $request->validated();
         if($request['status']) {
