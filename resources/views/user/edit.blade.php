@@ -19,8 +19,8 @@
         {{method_field('PUT')}}
         <input type="text" name="name" placeholder="Enter Your Name" value="{{$user['name']}}"><br>
         <input type="email" name="email" placeholder="Enter Your Email" value="{{$user['email']}}"><br>
-        <input type="text" name="password" placeholder="Enter Your Password" value="{{$user['password']}}"><br>
-        <input type="text" name="password_confirmation" placeholder="Confirm Your Password" value="{{$user['password']}}"><br>
+        {{-- <input type="text" name="password" placeholder="Enter Your Password" value="{{$user['password']}}"><br>
+        <input type="text" name="password_confirmation" placeholder="Confirm Your Password" value="{{$user['password']}}"><br> --}}
         <input type="text" name="address" placeholder="Enter Your Address" value="{{$user['address']}}"><br>
         <input type="text" name="phone" placeholder="Enter Your Phone" value="{{$user['phone']}}"><br>
         <input type="text" name="gender" placeholder="Enter Your Gender" value="{{$user['gender']}}"><br>

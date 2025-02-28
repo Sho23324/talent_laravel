@@ -71,17 +71,16 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $validatedData = $request->validated();
         $user = $this->userRepo->getUserById($id);
         $user->update([
-            'name'=>$validatedData['name'],
-            'email'=>$validatedData['email'],
-            'password'=>Hash::make($validatedData['password']),
-            'phone'=>$validatedData['phone'],
-            'address'=>$validatedData['address'],
-            'gender'=>$validatedData['gender']
+            'name'=>$request['name'],
+            'email'=>$request['email'],
+            // 'password'=>Hash::make($request['password']),
+            'phone'=>$request['phone'],
+            'address'=>$request['address'],
+            'gender'=>$request['gender']
         ]);
         return redirect()->route('users.index');
     }
