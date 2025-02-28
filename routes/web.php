@@ -3,6 +3,8 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -10,6 +12,9 @@ Route::get('/', function () {
 });
 
 //static
+Route::get('/dashboard', function() {
+    return view('dashboard');
+});
 Route::get('/blogs', function() {
     return "hello";
 });
@@ -20,9 +25,9 @@ Route::get('/blogs/{id}', function($id) {
 })->name("blogDetail.tpp");
 
 //naming
-Route::get('/dashboard', function() {
-    return "Welcome to Tpp";
-})->name("dashboard.tpp");
+// Route::get('/dashboard', function() {
+//     return "Welcome to Tpp";
+// })->name("dashboard.tpp");
 
 //redirect
 Route::get('/welcome-tpp', function() {
@@ -84,3 +89,11 @@ Route::post('/categories/{id}', [CategoryController::class, 'delete'])->name('ca
 Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit');
 
 Route::post('categories/{id}/update', [CategoryController::class, 'update'])->name('category.update');
+
+Auth::routes(['register'=>false]);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::resource('/users', UserController::class);
+
+

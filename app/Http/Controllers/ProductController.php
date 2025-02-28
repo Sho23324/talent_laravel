@@ -17,9 +17,11 @@ class ProductController extends Controller
     private $categoryRepo;
     public function __construct(ProductRepositoryInterface $productRepo, CategoryRepositoryInterface $categoryRepo)
     {
+        $this->middleware('auth');
         $this->productRepo = $productRepo;
         $this->categoryRepo = $categoryRepo;
     }
+
     public function index() {
         $products = $this->productRepo->getProducts();
         return view("product.index", compact("products"));
