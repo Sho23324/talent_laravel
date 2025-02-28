@@ -7,6 +7,13 @@
     <title>Document</title>
 </head>
 <body>
+    @if($errors->any())
+    @foreach($errors->all() as $error)
+        <div>
+            {{$error}}
+        </div>
+    @endforeach
+    @endif
     <form action="{{route('users.store')}}" method="POST">
         @csrf
         <input type="text" name="name" placeholder="Enter Your Name"><br>
