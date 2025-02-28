@@ -7,6 +7,13 @@
     <title>Document</title>
 </head>
 <body>
+    @if($errors->any())
+    @foreach ($errors->all() as $error)
+    <div class="">
+        {{$error}}
+    </div>
+        @endforeach
+    @endif
     <form action="{{route('users.update', $user->id)}}" method="POST">
         @csrf
         {{method_field('PUT')}}
