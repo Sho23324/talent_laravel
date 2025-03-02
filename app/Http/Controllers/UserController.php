@@ -40,16 +40,12 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $data = $request->validated();
-        $this->userRepo->create($data);
-        // $user = User::create([
-        //     'name'=>$data['name'],
-        //     'email'=>$data['email'],
-        //     'password'=>Hash::make($data['password']),
-        //     'phone'=>$data['phone'],
-        //     'address'=>$data['address'],
-        //     'gender'=>$data['gender']
-
-        // ]);
+        $user = $this->userRepo->create($data);
+        if($data['role'] == 'admin') {
+            $user->assignRole('admin');
+        }else if($data['role'] == 'guest') {
+            $user->assignRole('guest');
+        }
         return redirect()->route('users.index');
     }
 
@@ -58,7 +54,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = $this->userRepo->getUserById($id);
+        return view('user.show', compact('user'));
     }
 
     /**
@@ -78,8 +75,6 @@ class UserController extends Controller
         $user = $this->userRepo->getUserById($id);
         $user->update([
             'name'=>$validatedData['name'],
-            // 'email'=>$validatedData['email'],
-            // 'password'=>Hash::make($validatedData['password']),
             'phone'=>$validatedData['phone'],
             'address'=>$validatedData['address'],
             'gender'=>$validatedData['gender']
