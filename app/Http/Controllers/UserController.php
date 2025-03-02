@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
@@ -39,16 +40,12 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $data = $request->validated();
-        $this->userRepo->create($data);
-        // $user = User::create([
-        //     'name'=>$data['name'],
-        //     'email'=>$data['email'],
-        //     'password'=>Hash::make($data['password']),
-        //     'phone'=>$data['phone'],
-        //     'address'=>$data['address'],
-        //     'gender'=>$data['gender']
-
-        // ]);
+        $user = $this->userRepo->create($data);
+        if($data['role'] == 'admin') {
+            $user->assignRole('admin');
+        }else if($data['role'] == 'guest') {
+            $user->assignRole('guest');
+        }
         return redirect()->route('users.index');
     }
 
@@ -57,7 +54,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = $this->userRepo->getUserById($id);
+        return view('user.show', compact('user'));
     }
 
     /**
@@ -71,16 +69,15 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
+        $validatedData = $request->validated();
         $user = $this->userRepo->getUserById($id);
         $user->update([
-            'name'=>$request['name'],
-            'email'=>$request['email'],
-            'password'=>Hash::make($request['password']),
-            'phone'=>$request['phone'],
-            'address'=>$request['address'],
-            'gender'=>$request['gender']
+            'name'=>$validatedData['name'],
+            'phone'=>$validatedData['phone'],
+            'address'=>$validatedData['address'],
+            'gender'=>$validatedData['gender']
         ]);
         return redirect()->route('users.index');
     }

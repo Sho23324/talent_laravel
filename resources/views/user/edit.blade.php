@@ -1,26 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <form action="{{route('users.update', $user->id)}}" method="POST">
-        @csrf
-        {{method_field('PUT')}}
-        <input type="text" name="name" placeholder="Enter Your Name" value="{{$user['name']}}"><br>
-        <input type="email" name="email" placeholder="Enter Your Email" value="{{$user['email']}}"><br>
-        <input type="text" name="password" placeholder="Enter Your Password" value="{{$user['password']}}"><br>
-        <input type="text" name="password_confirmation" placeholder="Confirm Your Password" value="{{$user['password']}}"><br>
-        <input type="text" name="address" placeholder="Enter Your Address" value="{{$user['address']}}"><br>
-        <input type="text" name="phone" placeholder="Enter Your Phone" value="{{$user['phone']}}"><br>
-        <input type="text" name="gender" placeholder="Enter Your Gender" value="{{$user['gender']}}"><br>
-        <input type="submit" value="UPDATE">
-    </form><br>
-    <a href="{{route('users.index')}}">
-        BACK
-    </a>
-</body>
-</html>
+@extends('layouts.master');
+
+@section('content')
+    <div class="container" style="margin-left:20%">
+        <div class="card">
+            <div class="card-header fw-bold bg-primary text-white">
+                Edit Product
+            </div>
+            <div class="card-body">
+                <form action="{{ route('users.update', $user->id) }}" method="POST">
+                    @csrf
+                    {{ method_field('PUT') }}
+                    <label for="name" class="fw-bold">User Name</label>
+                    <input type="text" name="name" class="form-control" @error('name') is-invalid @enderror
+                        placeholder="Enter user Name" value="{{ $user['name'] }}">
+                    @error('name')
+                        <div class="text-danger" style="font-size: 12px">
+                            *{{ $message }}
+                        </div>
+                    @enderror
+
+                    <label for="address" class="fw-bold mt-4">Address</label>
+                    <textarea name="address" rows="3" placeholder="Enter Your Address" class="form-control"
+                        @error('address') is-invalid @enderror>{{ $user['address'] }}</textarea>
+                    @error('address')
+                        <div class="text-danger" style="font-size: 12px">
+                            *{{ $message }}
+                        </div>
+                    @enderror
+
+                    <label for="phone" class="fw-bold mt-4">Phonenumber</label>
+                    <input type="text" name="phone" class="form-control" value="{{ $user['phone'] }}"
+                        placeholder="Enter Your Phonenumber" @error('phone') is-invalid @enderror>
+                    @error('phone')
+                        <div class="text-danger" style="font-size: 12px">
+                            *{{ $message }}
+                        </div>
+                    @enderror
+                    <div class="">
+                        <label for="gender" class="fw-bold mt-4">Gender</label><br>
+                        <input type="radio" name="gender" class="" @error('gender') is-invalid @enderror
+                            value="Male" {{ $user->gender == 'Male' ? 'checked' : '' }} />
+
+                        <label for="gender" class="form-check-label" style="margin-right: 40px">Male</label>
+                        <input type="radio" name="gender" class="" @error('gender') is-invalid @enderror
+                            value="Female" {{ $user->gender == 'Female' ? 'checked' : '' }} />
+                        <label for="gender" class="form-check-label" style="margin-right: 40px">Female</label>
+                        @error('gender')
+                            <div class="text-danger" style="font-size: 12px">
+                                *{{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+            </div>
+            <div class="card-footer text-end">
+                <a href="{{ route('users.index') }}" type="submit" class="btn btn-outline-danger fw-bold me-2"
+                    style="margin-right: 10px">Back</a>
+                <button type="submit" class="btn btn-outline-primary fw-bold">Update</button>
+            </div>
+            </form>
+        </div>
+    </div>
+@endsection
