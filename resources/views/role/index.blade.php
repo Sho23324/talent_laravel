@@ -19,7 +19,7 @@
                 <tbody>
                     @foreach ($roles as $role)
                         <tr>
-                            <td>{{ $role['name'] }}</td>
+                            <td style="text-transform: capitalize">{{ $role['name'] }}</td>
                             <td>
                                 <a href="{{ route('roles.show', $role->id) }}" class="btn btn-outline-info me-2"><i
                                         class="fa-solid fa-eye"></i></a>

@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use App\Repositories\User\UserRepositoryInterface;
+use Illuminate\Contracts\Support\ValidatedData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,8 +18,8 @@ class UserController extends Controller
     private $userRepo;
     public function __construct(UserRepositoryInterface $userRepo)
     {
-        $this->userRepo = $userRepo;
         $this->middleware('auth');
+        $this->userRepo = $userRepo;
     }
     public function index()
     {
@@ -73,11 +74,17 @@ class UserController extends Controller
     {
         $validatedData = $request->validated();
         $user = $this->userRepo->getUserById($id);
+        if($request->status == NULL) {
+            $status = false;
+        }else if($request->status == 'active') {
+            $status = true;
+        }
         $user->update([
             'name'=>$validatedData['name'],
             'phone'=>$validatedData['phone'],
             'address'=>$validatedData['address'],
-            'gender'=>$validatedData['gender']
+            'gender'=>$validatedData['gender'],
+            'status'=>$status
         ]);
         return redirect()->route('users.index');
     }

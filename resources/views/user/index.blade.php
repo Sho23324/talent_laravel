@@ -18,18 +18,25 @@
                         <th class="bg-primary text-white">PHONENUMBER</th>
                         <th class="bg-primary text-white">GENDER</th>
                         <th class="bg-primary text-white">ROLE</th>
+                        <th class="bg-primary text-white">STATUS</th>
                         <th class="bg-primary text-white">ACTION</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($users as $user)
                         <tr>
-                            <td>{{ $user['name'] }}</td>
+                            <td style="text-transform:capitalize">{{ $user['name'] }}</td>
                             <td>{{ $user['email'] }}</td>
                             <td>{{ $user['address'] }}</td>
                             <td>{{ $user['phone'] }}</td>
                             <td>{{ $user['gender'] }}</td>
-                            <td>{{ $user->getRoleNames() }}</td>
+                            <td style="text-transform: uppercase">{{ $user->roles->pluck('name')->implode(', ') }}</td>
+                            @if ($user['status'] == true)
+                                <td class="text-success">Active</td>
+                            @endif
+                            @if ($user['status'] == false)
+                                <td class="text-danger">Suspand</td>
+                            @endif
                             <td>
                                 <a href="{{ route('users.show', $user->id) }}" class="btn btn-outline-info me-2"><i
                                         class="fa-solid fa-eye"></i></a>

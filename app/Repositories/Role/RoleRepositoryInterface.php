@@ -5,4 +5,5 @@ interface RoleRepositoryInterface {
     public function getRoles();
     public function getRoleById($id);
     public function create($role);
+    public function getRolePermissions();
 }

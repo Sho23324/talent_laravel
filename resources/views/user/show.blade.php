@@ -26,6 +26,10 @@
                 <label for="gender" class="fw-bold mt-4 form-label">Gender</label>
                 <input type="text" class="form-control" value="{{ $user['gender'] }}" readonly />
             </div>
+            <div class="card-body">
+                <label for="active" class="fw-bold mt-4 form-label">Status</label>
+                <input type="text" class="form-control" value="{{ $user['status'] ? 'Active' : 'Suspand' }}" readonly />
+            </div>
 
             <div class="card-footer text-end">
                 <a href="{{ route('users.index') }}" type="submit" class="btn btn-outline-danger fw-bold me-2">Back</a>

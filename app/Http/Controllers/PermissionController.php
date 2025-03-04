@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PermissionRequest;
 use App\Repositories\Permission\PermissionRepositoryInterface;
-use Illuminate\Http\Request;
+
 
 
 class PermissionController extends Controller
@@ -57,7 +57,8 @@ class PermissionController extends Controller
     public function edit(string $id)
     {
         $permission = $this->permissionRepo->getPermissionsById($id);
-        return view('permission.edit', compact('permission'));
+        $roles = $permission->roles->pluck('name')->toArray();
+        return view('permission.edit', compact('permission', 'roles'));
     }
 
     /**

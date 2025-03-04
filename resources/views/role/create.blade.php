@@ -17,6 +17,11 @@
                             *{{ $message }}
                         </div>
                     @enderror
+                    @foreach ($permissions as $permission)
+                        <input type="checkbox" name="permissions[]" value="{{ $permission['id'] }}">
+                        <label for="permission_name">{{ $permission['name'] }}</label> <br>
+                    @endforeach
+                    .
             </div>
             <div class="card-footer">
                 <a href="{{ route('roles.index') }}" type="submit" class="btn btn-outline-danger fw-bold me-2"
