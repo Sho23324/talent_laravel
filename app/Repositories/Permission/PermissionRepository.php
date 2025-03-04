@@ -5,21 +5,18 @@ use Spatie\Permission\Models\Role;
 
 class PermissionRepository implements PermissionRepositoryInterface {
     public function getPermissions() {
-        $permissions = Permission::all();
-        return $permissions;
+        return Permission::all();
     }
 
     public function create($permission) {
-        $permission = Permission::create($permission);
+        return Permission::create($permission);
     }
 
     public function getPermissionsById($id) {
-        $permission = Permission::find($id);
-        return $permission;
+        return Permission::find($id);
     }
 
     public function getRoles() {
-        $roles = Role::with('permissions')->get();
-        return $roles;
+        return Role::with('permissions')->get();
     }
 }

@@ -5,14 +5,13 @@ use App\Models\Category;
 
 class CategoryRepository implements CategoryRepositoryInterface {
     public function getCategories() {
-        $categories = Category::all();
-        return $categories;
+        return Category::all();
     }
 
     public function getCategoryById($category_id) {
-        $category = Category::find($category_id);
-        return $category;
+        return Category::find($category_id);
     }
+
     public function create($category) {
         return Category::create($category);
     }

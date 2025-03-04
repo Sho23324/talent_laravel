@@ -2,6 +2,7 @@
 namespace App\Repositories\Product;
 
 use App\Models\Product;
+use App\Models\ProductImage;
 
 class ProductRepository implements ProductRepositoryInterface {
     public function getProducts() {
@@ -20,5 +21,13 @@ class ProductRepository implements ProductRepositoryInterface {
 
     public function getCategoryProduct($id) {
         return Product::with('category')->where('id', $id)->first();
+    }
+
+    public function getActiveProducts() {
+        return Product::where('status', 1)->get();
+    }
+
+    public function getProductImagesByProductId($id) {
+        return Product::with('images')->where('id', $id)->first();
     }
 }
