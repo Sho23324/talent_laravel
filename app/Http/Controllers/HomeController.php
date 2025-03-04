@@ -14,9 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware(Auth::attempt(['email' => $email, 'password' => $password, 'status'=>1]));
         $this->middleware('auth');
-
     }
 
     /**

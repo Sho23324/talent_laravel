@@ -2,28 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductImageRequest;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
-use App\Models\Category;
-use App\Models\Product;
+
 use App\Repositories\Category\CategoryRepositoryInterface;
 use App\Repositories\Product\ProductRepositoryInterface;
-use Illuminate\Http\Request;
+use App\Repositories\ProductImage\ProductImageRepositoryInterface;
+use App\Services\Product\ProductService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+
 
 class ProductController extends Controller
 {
     private $productRepo;
     private $categoryRepo;
-    public function __construct(ProductRepositoryInterface $productRepo, CategoryRepositoryInterface $categoryRepo)
+    private $productService;
+    private $productImageRepo;
+
+    public function __construct(ProductRepositoryInterface $productRepo, CategoryRepositoryInterface $categoryRepo, ProductService $productService, ProductImageRepositoryInterface $productImageRepo)
     {
         $this->middleware('auth');
         $this->productRepo = $productRepo;
         $this->categoryRepo = $categoryRepo;
+        $this->productService = $productService;
+        $this->productImageRepo = $productImageRepo;
     }
 
     public function index() {
-        $products = $this->productRepo->getProducts();
+        $roleName = Auth::user()->roles->pluck('name');
+        if($roleName->contains('admin')) {
+            $products = $this->productRepo->getProducts();
+        }
+        if($roleName->contains('guest')){
+            $products = $this->productRepo->getActiveProducts();
+        }
+
         return view("product.index", compact("products"));
     }
 
@@ -43,11 +58,11 @@ class ProductController extends Controller
         if($request['status'] == 'active') {
             $validatedData = array_merge($validatedData,['status'=>true]);
         }
-        if($request->hasFile('image')) {
-            $imageName =  time() . '.' .$request->image->extension();
-            $request->image->move(public_path('productImage'), $imageName);
-            $validatedData = array_merge($validatedData, ['image'=>$imageName]);
-        }
+        // if($request->hasFile('image')) {
+        //     $imageName =  time() . '.' .$request->image->extension();
+        //     $request->image->move(public_path('productImage'), $imageName);
+        //     $validatedData = array_merge($validatedData, ['image'=>$imageName]);
+        // }
         $this->productRepo->create($validatedData);
         return redirect()->route('products.index');
     }
@@ -86,6 +101,32 @@ class ProductController extends Controller
         }
 
         $product->update($validatedData);
+        return redirect()->route('products.index');
+    }
+
+    public function status($id) {
+        $this->productService->status($id);
+        return redirect()->route('products.index');
+    }
+
+    public function imgForm($id) {
+        $product = $this->productRepo->getProductById($id);
+        $productImages = $this->productRepo->getProductImagesByProductId($product->id);
+        return view('product.imageForm', compact('product', 'productImages'));
+    }
+
+    public function storeImg(ProductImageRequest $request) {
+        $validatedData = $request->validated();
+        $imageName =  time() . '.' .$request->image->extension();
+        $request->image->move(public_path('productImage'), $imageName);
+        $validatedData = array_merge($validatedData, ['image'=>$imageName]);
+        $this->productService->storeImg($validatedData);
+        return redirect()->route('products.index');
+    }
+
+    public function deleteImg($id) {
+        $this->productImageRepo->delete($id);
+
         return redirect()->route('products.index');
     }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -103,3 +104,13 @@ Route::resource('/roles',RoleController::class);
 
 //Permission
 Route::resource('/permissions', PermissionController::class);
+
+
+Route::post('/status/{id}', [ProductController::class, 'status'])->name('products.status');
+
+Route::post('/storeImg/{id}', [ProductController::class, 'imgForm'])->name('products.imgForm');
+
+Route::post('/storeImgAction/{id}', [ProductController::class, 'storeImg'])->name('products.storeImg');
+
+Route::post('/deleteImg/{id}', [ProductController::class, 'deleteImg'])->name('products.deleteImg');
+// Route::resource('/productImages', ProductImageController::class);

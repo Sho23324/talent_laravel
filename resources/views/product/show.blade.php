@@ -28,11 +28,6 @@
                     @endforeach
                 </select>
             </div>
-
-            <div class="card-body fw-bold">
-                <label for="image" class="form-label">Product Image : </label>
-                <img src="{{ asset('productImage/' . $product['image']) }}" alt="image" width="100px">
-            </div>
             <div class="card-body fw-bold">
                 <div class="form-check form-switch mt-4">
                     @if ($product['status'] == true)

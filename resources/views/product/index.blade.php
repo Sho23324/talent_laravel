@@ -16,7 +16,9 @@
                         <th class="bg-primary text-white">DESCRIPTION</th>
                         <th class="bg-primary text-white">PRICE</th>
                         <th class="bg-primary text-white">Image</th>
-                        <th class="bg-primary text-white">STATUS</th>
+                        @can('categoryUpdate')
+                            <th class="bg-primary text-white">STATUS</th>
+                        @endcan
                         <th class="bg-primary text-white">ACTION</th>
                     </tr>
                 </thead>
@@ -26,14 +28,24 @@
                             <td>{{ $product['name'] }}</td>
                             <td>{{ $product['description'] }}</td>
                             <td>{{ $product['price'] }}</td>
-                            <td><img src="{{ asset('productImage/' . $product['image']) }}" alt="image" width="60px">
+                            <td>
+                                <form action="{{ route('products.imgForm', ['id' => $product['id']]) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-primary">+ image</button>
+                                </form>
                             </td>
-                            @if ($product['status'] == true)
-                                <td class="text-success fw-bold">Available</td>
-                            @endif
-                            @if ($product['status'] == false)
-                                <td class="text-danger fw-bold">Unavailable</td>
-                            @endif
+                            @can('categoryUpdate')
+                                <td>
+                                    <form action="{{ route('products.status', ['id' => $product['id']]) }}" method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            class="btn btn-{{ $product->status == 1 ? 'success' : 'danger' }}">
+                                            {{ $product->status == 1 ? 'Active' : 'Inactive' }}
+                                        </button>
+                                    </form>
+                                </td>
+                            @endcan
+
                             <td>
                                 <a href="{{ route('products.detail', ['id' => $product['id']]) }}"
                                     class="btn btn-outline-info me-2"><i class="fa-solid fa-eye"></i></a>
