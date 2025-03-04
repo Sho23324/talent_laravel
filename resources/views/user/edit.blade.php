@@ -50,7 +50,13 @@
                                 *{{ $message }}
                             </div>
                         @enderror
+                    </div>
+                    <div class="">
+                        <label for="gender" class="fw-bold mt-4">Status</label><br>
+                        <input type="checkbox" name="status" class="" value="active"
+                            {{ $user->status == true ? 'checked' : '' }} />
 
+                        <label for="gender" class="form-check-label" style="margin-right: 40px">Active</label>
                     </div>
             </div>
             <div class="card-footer text-end">

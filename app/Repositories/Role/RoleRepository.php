@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories\Role;
 
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleRepository implements RoleRepositoryInterface{
@@ -16,5 +17,10 @@ class RoleRepository implements RoleRepositoryInterface{
     public function getRoleByid($id) {
         $role = Role::find($id);
         return $role;
+    }
+
+    public function getRolePermissions() {
+        $permissions = Permission::with('roles')->get();
+        return $permissions;
     }
 }
