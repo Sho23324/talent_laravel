@@ -109,6 +109,8 @@ class ProductController extends Controller
         return redirect()->route('products.index');
     }
 
+    //image store
+
     public function imgForm($id) {
         $product = $this->productRepo->getProductById($id);
         $productImages = $this->productRepo->getProductImagesByProductId($product->id);
@@ -126,7 +128,6 @@ class ProductController extends Controller
 
     public function deleteImg($id) {
         $this->productImageRepo->delete($id);
-
         return redirect()->route('products.index');
     }
 }

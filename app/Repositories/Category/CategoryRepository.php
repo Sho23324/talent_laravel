@@ -15,4 +15,9 @@ class CategoryRepository implements CategoryRepositoryInterface {
     public function create($category) {
         return Category::create($category);
     }
+
+    public function delete($id) {
+        $category = Category::find($id);
+        return $category->delete();
+    }
 }

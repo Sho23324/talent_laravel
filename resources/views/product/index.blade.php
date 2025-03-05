@@ -16,7 +16,7 @@
                         <th class="bg-primary text-white">DESCRIPTION</th>
                         <th class="bg-primary text-white">PRICE</th>
                         <th class="bg-primary text-white">Image</th>
-                        @can('categoryUpdate')
+                        @can('productUpdate')
                             <th class="bg-primary text-white">STATUS</th>
                         @endcan
                         <th class="bg-primary text-white">ACTION</th>
@@ -34,7 +34,7 @@
                                     <button type="submit" class="btn btn-outline-primary">+ image</button>
                                 </form>
                             </td>
-                            @can('categoryUpdate')
+                            @can('productUpdate')
                                 <td>
                                     <form action="{{ route('products.status', ['id' => $product['id']]) }}" method="POST">
                                         @csrf
@@ -49,14 +49,14 @@
                             <td>
                                 <a href="{{ route('products.detail', ['id' => $product['id']]) }}"
                                     class="btn btn-outline-info me-2"><i class="fa-solid fa-eye"></i></a>
-                                @can('categoryUpdate')
+                                @can('productUpdate')
                                     <a href="{{ route('products.edit', ['id' => $product['id']]) }}"
                                         class="btn btn-outline-warning me-2"><i class="fa-solid fa-pen-to-square"></i></a>
                                 @endcan
                                 <form action="{{ route('products.delete', ['id' => $product['id']]) }}" method="POST"
                                     class="d-inline">
                                     @csrf
-                                    @can('categoryDelete')
+                                    @can('productDelete')
                                         <button type="submit" class="btn btn-outline-danger"><i
                                                 class="fa-solid fa-trash"></i></button>
                                     @endcan
