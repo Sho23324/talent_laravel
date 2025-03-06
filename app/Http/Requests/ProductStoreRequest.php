@@ -25,6 +25,7 @@ class ProductStoreRequest extends FormRequest
             'category_id'=>'required',
             'name'=>'required',
             'description'=>'required',
+            'status'=>'required',
             'price'=>'required|int',
         ];
     }
