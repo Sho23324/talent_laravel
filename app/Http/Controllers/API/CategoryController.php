@@ -29,6 +29,13 @@ class CategoryController extends BaseController
         return $this->success($category, "Product created successfully", 201);
     }
 
+    public function update(CategoryCreateRequest $request, $id) {
+        $validatedData = $request->validated();
+        $category = $this->categoryRepo->getCategoryById($id);
+        $category->update($validatedData);
+        return $this->success($category, "Category updated successfully", 204);
+    }
+
     public function delete($id) {
         $category = $this->categoryRepo->delete($id);
         return $this->success($category, "Category delete successfully");

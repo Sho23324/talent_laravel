@@ -20,15 +20,22 @@ class ProductController extends BaseController
         return $this->success($products, 'Products retrieved successsfully', 200);
     }
 
+    public function show($id) {
+        $product = $this->productRepo->getProductById($id);
+        return $this->success($product, 'Product Details', 200);
+    }
+
     public function store(ProductStoreRequest $request) {
         $validatedData = $request->validated();
         $product = $this->productRepo->create($validatedData);
         return $this->success($product, 'Product Created Successfully', 201);
     }
 
-    public function show($id) {
+    public function update($id, ProductStoreRequest $request) {
+        $validatedData = $request->validated();
         $product = $this->productRepo->getProductById($id);
-        return $this->success($product, 'Product Details', 200);
+        $product->update($validatedData);
+        return $this->success($product, "Product Updated Successfully", 200);
     }
 
     public function delete($id) {
