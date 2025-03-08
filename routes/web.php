@@ -14,10 +14,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//static
-// Route::get('/dashboard', function() {
-//     return view('dashboard');
-// });
+
 Route::get('/blogs', function() {
     return "hello";
 });
@@ -26,11 +23,6 @@ Route::get('/blogs', function() {
 Route::get('/blogs/{id}', function($id) {
     return "hello, This is blog detail - $id";
 })->name("blogDetail.tpp");
-
-//naming
-// Route::get('/dashboard', function() {
-//     return "Welcome to Tpp";
-// })->name("dashboard.tpp");
 
 //redirect
 Route::get('/welcome-tpp', function() {
@@ -51,10 +43,6 @@ Route::prefix("/dashboard")->group(function() {
         return redirect()->route("dashboard.user");
     });
 });
-
-// Route::get("/categories", function() {
-//     return view("category.index");
-// });
 
 //articles
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.list');
