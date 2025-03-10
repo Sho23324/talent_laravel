@@ -1,11 +1,10 @@
 <?php
 namespace App\Repositories\ProductImage;
 
-use App\Http\Requests\ProductImageRequest;
-use App\Models\ProductImage;
-
 interface ProductImageRepositoryInterface {
     public function getProductImages();
-    public function create(ProductImageRequest $request);
+    public function getProductImageById($id);
+    public function create($request);
+    public function getProductImageByProductId($id);
     public function delete($id);
 }
