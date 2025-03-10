@@ -62,8 +62,7 @@ class UserController extends BaseController
      */
     public function destroy(string $id)
     {
-        $user = $this->userRepo->getUserById($id);
-        $user->delete();
+        $user = $this->userRepo->deleteUsersById($id);
         return $this->success($user, "User deleted successfully", 204);
     }
 

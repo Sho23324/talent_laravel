@@ -39,8 +39,7 @@ class ProductController extends BaseController
     }
 
     public function delete($id) {
-        $product = $this->productRepo->getProductById($id);
-        $product->delete();
+        $product = $this->productRepo->deleteProductsById($id);
         return $this->success($product, "Product delete Successful", 204);
     }
 

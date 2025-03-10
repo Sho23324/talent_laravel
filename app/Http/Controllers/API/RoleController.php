@@ -58,8 +58,7 @@ class RoleController extends BaseController
      */
     public function destroy(string $id)
     {
-        $role = $this->roleRepo->getRoleById($id);
-        $role->delete();
+        $role = $this->roleRepo->deleteRolesById($id);
         return $this->success($role, "Role deleted successfully", 204);
     }
 }

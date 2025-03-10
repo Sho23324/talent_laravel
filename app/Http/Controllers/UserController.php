@@ -94,8 +94,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $user = $this->userRepo->getUserById($id);
-        $user->delete();
+        $this->userRepo->deleteUsersById($id);
         return redirect()->route('users.index');
     }
 }

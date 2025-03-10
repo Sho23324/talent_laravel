@@ -29,7 +29,7 @@ class ProductImageController extends BaseController
     public function store(ProductImageRequest $request)
     {
         $validatedData = $request->validated();
-        $imageName =  time() . '.' .$request->image->extension();
+        $imageName = time(). '.' . $request->image->extension();
         $request->image->move(public_path('productImage'), $imageName);
         $validatedData = array_merge($validatedData, ['image'=>$imageName]);
         $productImage = $this->productImageRepo->create($validatedData);

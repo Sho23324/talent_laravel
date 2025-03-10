@@ -23,4 +23,9 @@ class RoleRepository implements RoleRepositoryInterface{
         $permissions = Permission::with('roles')->get();
         return $permissions;
     }
+
+    public function deleteRolesById($id) {
+        $role = Role::find($id);
+        return $role->delete();
+    }
 }

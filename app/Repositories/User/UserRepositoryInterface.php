@@ -5,4 +5,5 @@ interface UserRepositoryInterface {
     public function getUsers();
     public function getUserById($id);
     public function create($data);
+    public function deleteUsersById($id);
 }
