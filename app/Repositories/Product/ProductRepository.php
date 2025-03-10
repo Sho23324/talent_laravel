@@ -30,4 +30,9 @@ class ProductRepository implements ProductRepositoryInterface {
     public function getProductImagesByProductId($id) {
         return Product::with('images')->where('id', $id)->first();
     }
+
+    public function deleteProductsById($id) {
+        $product = Product::find($id);
+        return $product->delete();
+    }
 }

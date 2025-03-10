@@ -7,5 +7,6 @@ interface ProductRepositoryInterface {
     public function create($product);
     public function getCategoryProduct($id);
     public function getActiveProducts();
+    public function deleteProductsById($id);
     public function getProductImagesByProductId($id);
 }

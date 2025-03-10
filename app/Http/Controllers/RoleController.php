@@ -85,8 +85,7 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        $role = $this->roleRepo->getRoleById($id);
-        $role->delete();
+        $this->roleRepo->deleteRolesById($id);
         return redirect()->route('roles.index');
     }
 }

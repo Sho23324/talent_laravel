@@ -46,6 +46,11 @@ Route::group(['middleware'=>'auth:api'], function() {
 //permissions
     Route::apiResource('permissions', PermissionController::class);
 
+//assign permissions
+    Route::post('assignPermissions', [PermissionController::class, 'assignPermissions'])->name('permissions.assign');
+
+//unassign permissions
+    Route::put('unassignPermissions/{id}', [PermissionController::class, 'unassignPermissions'])->name('permissions.unassign');
 
 //produdct image
     Route::apiResource('productImages', ProductImageController::class);
