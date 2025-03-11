@@ -25,7 +25,7 @@ class CategoryController extends BaseController
             $category = $this->categoryRepository->show($id);
             return $this->success($category, "Category Details", 200);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Category Not Found", null,  404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Category Not Found", null,  500);
         }
     }
 
@@ -41,7 +41,7 @@ class CategoryController extends BaseController
             $category = $this->categoryRepository->update($validatedData, $request, $id);
             return $this->success($category, "Category updated successfully", 200);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Category Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Category Not Found", null, 500);
         }
     }
 
@@ -50,7 +50,7 @@ class CategoryController extends BaseController
             $category = $this->categoryRepository->delete($id);
             return $this->success($category, "Category delete successfully");
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Category Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Category Not Found", null, 500);
         }
     }
 }
