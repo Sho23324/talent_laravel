@@ -43,7 +43,7 @@ class ProductImageController extends BaseController
             $productImages = $this->productImageRepository->show($id);
             return $this->success($productImages, "Product images by product id", 200);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
         }
     }
 
@@ -64,7 +64,7 @@ class ProductImageController extends BaseController
             $productImage = $this->productImageRepository->delete($id);
             return $this->success($productImage, "Product image deleted successfully", 204);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
         }
     }
 }

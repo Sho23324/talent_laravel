@@ -43,7 +43,7 @@ class RoleController extends BaseController
             $role = $this->roleRepository->show($id);
             return $this->success($role, "Role Details", 200);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 500);
         }
     }
 
@@ -57,7 +57,7 @@ class RoleController extends BaseController
             $role = $this->roleRepository->update($validatedData, $id, $request);
             return $this->success($role, "Role updated successfully", 200);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 500);
         }
     }
 
@@ -70,7 +70,7 @@ class RoleController extends BaseController
             $role = $this->roleRepository->delete($id);
             return $this->success($role, "Role deleted successfully", 204);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 500);
         }
     }
 }
