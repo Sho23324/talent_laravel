@@ -47,7 +47,7 @@ class PermissionController extends BaseController
             $permission = $this->permissionRepository->show($id);
             return $this->success($permission, "Permissoin Details", 200);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 500);
         }
     }
 
@@ -61,7 +61,7 @@ class PermissionController extends BaseController
             $permission = $this->permissionRepository->update($validatedData, $id);
             return $this->success($permission, "Permission updated successfully", 200);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 500);
         }
     }
 
@@ -74,7 +74,7 @@ class PermissionController extends BaseController
             $permission = $this->permissionRepository->delete($id);
             return $this->success($permission, "Permission deleted successfully", 204);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 500);
         }
     }
 
