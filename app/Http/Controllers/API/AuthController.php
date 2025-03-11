@@ -14,7 +14,7 @@ class AuthController extends BaseController
             $cretendials = $request->only(['email', 'password']);
 
             if(!JWTAuth::attempt($cretendials)) {
-                return $this->error("Your cretendials are wrond");
+                return $this->error("Your cretendials are wrong");
             }
 
             $user = User::where('email', $cretendials['email'])->first();
