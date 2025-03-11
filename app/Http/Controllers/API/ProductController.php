@@ -25,7 +25,7 @@ class ProductController extends BaseController
             $product = $this->productRepository->show($id);
             return $this->success($product, 'Product Details', 200);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
         }
     }
 
@@ -35,7 +35,7 @@ class ProductController extends BaseController
             $product = $this->productRepository->create($validatedData);
             return $this->success($product, 'Product Created Successfully', 201);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
         }
     }
 
@@ -45,7 +45,7 @@ class ProductController extends BaseController
             $product = $this->productRepository->update($validatedData, $id);
             return $this->success($product, "Product Updated Successfully", 200);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
         }
     }
 
@@ -54,7 +54,7 @@ class ProductController extends BaseController
             $product = $this->productRepository->show($id);
             return $this->success($product, "Product delete Successful", 204);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
         }
     }
 

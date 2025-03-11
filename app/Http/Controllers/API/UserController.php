@@ -45,7 +45,7 @@ class UserController extends BaseController
             $user = $this->userRepository->show($id);
             return $this->success($user, "User Details", 200);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "User Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "User Not Found", null, 500);
         }
     }
 
@@ -59,7 +59,7 @@ class UserController extends BaseController
             $user = $this->userRepository->update($validatedData, $id);
             return $this->success($user, "User updated successfully", 204);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "User Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "User Not Found", null, 500);
         }
     }
 
@@ -72,7 +72,7 @@ class UserController extends BaseController
             $user = $this->userRepository->delete($id);
             return $this->success($user, "User deleted successfully", 204);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "User Not Found", null, 404);
+            return $this->error($e->getMessage() ? $e->getMessage() : "User Not Found", null, 500);
         }
     }
 }

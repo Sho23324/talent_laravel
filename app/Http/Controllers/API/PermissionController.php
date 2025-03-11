@@ -33,11 +33,8 @@ class PermissionController extends BaseController
      */
     public function store(PermissionRequest $request)
     {
-
         $validatedData = $request->validated();
-
         $permission = $this->permissionRepository->create($validatedData);
-
         return $this->success($permission, "Permission created successfully", 201);
     }
 
