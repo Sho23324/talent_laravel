@@ -9,7 +9,8 @@ class UserService {
     {
         $this->userRepo = $userRepo;
     }
-    public function status($id) {
 
-    }
+    // public function status($id) {
+
+    // }
 }

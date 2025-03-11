@@ -4,7 +4,6 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -101,4 +100,3 @@ Route::post('/storeImg/{id}', [ProductController::class, 'imgForm'])->name('prod
 Route::post('/storeImgAction/{id}', [ProductController::class, 'storeImg'])->name('products.storeImg');
 
 Route::post('/deleteImg/{id}', [ProductController::class, 'deleteImg'])->name('products.deleteImg');
-// Route::resource('/productImages', ProductImageController::class);

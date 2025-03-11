@@ -2,45 +2,60 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductStoreRequest;
-use App\Models\Product;
 use App\Repositories\Product\ProductRepositoryInterface;
-use Illuminate\Http\Request;
+use Exception;
 
 class ProductController extends BaseController
 {
-    private $productRepo;
-    public function __construct(ProductRepositoryInterface $productRepo)
+    private $productRepository;
+
+    public function __construct(ProductRepositoryInterface $productRepository)
     {
-        $this->productRepo = $productRepo;
+        $this->productRepository = $productRepository;
     }
+
     public function index() {
-        $products = $this->productRepo->getProducts();
+        $products = $this->productRepository->index();
         return $this->success($products, 'Products retrieved successsfully', 200);
     }
 
     public function show($id) {
-        $product = $this->productRepo->getProductById($id);
-        return $this->success($product, 'Product Details', 200);
+        try {
+            $product = $this->productRepository->show($id);
+            return $this->success($product, 'Product Details', 200);
+        }catch (Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+        }
     }
 
     public function store(ProductStoreRequest $request) {
-        $validatedData = $request->validated();
-        $product = $this->productRepo->create($validatedData);
-        return $this->success($product, 'Product Created Successfully', 201);
+        try {
+            $validatedData = $request->validated();
+            $product = $this->productRepository->create($validatedData);
+            return $this->success($product, 'Product Created Successfully', 201);
+        }catch (Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+        }
     }
 
-    public function update($id, ProductStoreRequest $request) {
+    public function update(ProductStoreRequest $request, $id) {
         $validatedData = $request->validated();
-        $product = $this->productRepo->getProductById($id);
-        $product->update($validatedData);
-        return $this->success($product, "Product Updated Successfully", 200);
+        try {
+            $product = $this->productRepository->update($validatedData, $id);
+            return $this->success($product, "Product Updated Successfully", 200);
+        }catch (Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+        }
     }
 
     public function delete($id) {
-        $product = $this->productRepo->deleteProductsById($id);
-        return $this->success($product, "Product delete Successful", 204);
+        try {
+            $product = $this->productRepository->show($id);
+            return $this->success($product, "Product delete Successful", 204);
+        }catch (Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+        }
     }
 
 }

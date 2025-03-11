@@ -1,10 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductImageRequest;
 use App\Repositories\ProductImage\ProductImageRepositoryInterface;
+use Exception;
 use Illuminate\Http\Request;
 
 class ProductImageController extends BaseController
@@ -12,14 +11,16 @@ class ProductImageController extends BaseController
     /**
      * Display a listing of the resource.
      */
-    private $productImageRepo;
-    public function __construct(ProductImageRepositoryInterface $productImageRepo)
+    private $productImageRepository;
+
+    public function __construct(ProductImageRepositoryInterface $productImageRepository)
     {
-        $this->productImageRepo = $productImageRepo;
+        $this->productImageRepository = $productImageRepository;
     }
+
     public function index()
     {
-        $productImages = $this->productImageRepo->getProductImages();
+        $productImages = $this->productImageRepository->index();
         return $this->success($productImages, "Product images retrieved successfully", 200);
     }
 
@@ -29,10 +30,7 @@ class ProductImageController extends BaseController
     public function store(ProductImageRequest $request)
     {
         $validatedData = $request->validated();
-        $imageName = time(). '.' . $request->image->extension();
-        $request->image->move(public_path('productImage'), $imageName);
-        $validatedData = array_merge($validatedData, ['image'=>$imageName]);
-        $productImage = $this->productImageRepo->create($validatedData);
+        $productImage = $this->productImageRepository->create($validatedData, $request);
         return $this->success($productImage, "Product image inserted successfully", 201);
     }
 
@@ -41,8 +39,12 @@ class ProductImageController extends BaseController
      */
     public function show(string $id)
     {
-        $productImages = $this->productImageRepo->getProductImageById($id);
-        return $this->success($productImages, "Product images by product id", 200);
+        try {
+            $productImages = $this->productImageRepository->show($id);
+            return $this->success($productImages, "Product images by product id", 200);
+        }catch (Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+        }
     }
 
     /**
@@ -58,7 +60,11 @@ class ProductImageController extends BaseController
      */
     public function destroy(string $id)
     {
-        $productImage = $this->productImageRepo->delete($id);
-        return $this->success($productImage, "Product image deleted successfully", 204);
+        try {
+            $productImage = $this->productImageRepository->delete($id);
+            return $this->success($productImage, "Product image deleted successfully", 204);
+        }catch (Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 404);
+        }
     }
 }

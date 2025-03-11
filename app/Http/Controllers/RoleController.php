@@ -5,24 +5,24 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RoleRequest;
 use App\Repositories\Permission\PermissionRepositoryInterface;
 use App\Repositories\Role\RoleRepositoryInterface;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    private $roleRepo;
-    private $permissionRepo;
-    public function __construct(RoleRepositoryInterface $roleRepo, PermissionRepositoryInterface $permissionRepo)
+    private $roleRepository;
+    private $permissionRepository;
+
+    public function __construct(RoleRepositoryInterface $roleRepository, PermissionRepositoryInterface $permissionRepository)
     {
         $this->middleware('auth');
-        $this->roleRepo = $roleRepo;
-        $this->permissionRepo = $permissionRepo;
+        $this->roleRepository = $roleRepository;
+        $this->permissionRepository = $permissionRepository;
     }
+
     public function index()
-    {   $roles = $this->roleRepo->getRoles();
+    {   $roles = $this->roleRepository->index();
         return view('role.index', compact('roles'));
     }
 
@@ -31,7 +31,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-    $permissions = $this->roleRepo->getRolePermissions();
+        $permissions = $this->roleRepository->index();
         return view('role.create', compact('permissions'));
     }
 
@@ -41,7 +41,7 @@ class RoleController extends Controller
     public function store(RoleRequest $request)
     {
         $validatedData = $request->validated();
-        $role = $this->roleRepo->create($validatedData);
+        $role = $this->roleRepository->create($validatedData);
         $role->permissions()->attach($request['permissions']);
         return redirect()->route('roles.index');
     }
@@ -51,8 +51,8 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
-        $role = $this->roleRepo->getRoleById($id);
-        $permissions = $this->roleRepo->getRolePermissions($id);
+        $role = $this->roleRepository->show($id);
+        $permissions = $this->roleRepository->index();
         return view('role.show', compact('role', 'permissions'));
     }
 
@@ -61,8 +61,8 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        $role = $this->roleRepo->getRoleById($id);
-        $permissions = $this->permissionRepo->getPermissions();
+        $role = $this->roleRepository->show($id);
+        $permissions = $this->permissionRepository->index();
         $rolePermissions = $role->permissions->pluck('id')->toArray();
         return view('role.edit', compact('role', 'permissions', 'rolePermissions'));
     }
@@ -73,11 +73,8 @@ class RoleController extends Controller
     public function update(RoleRequest $request, string $id)
     {
         $validatedData = $request->validated();
-        $role = $this->roleRepo->getRoleById($id);
-        $role->update($validatedData);
-        $role->permissions()->sync($request['permissions']);
+        $this->roleRepository->update($validatedData, $id, $request);
         return redirect()->route('roles.index');
-
     }
 
     /**
@@ -85,7 +82,7 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->roleRepo->deleteRolesById($id);
+        $this->roleRepository->delete($id);
         return redirect()->route('roles.index');
     }
 }

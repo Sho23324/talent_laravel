@@ -1,12 +1,12 @@
 <?php
 namespace App\Repositories\Permission;
 
-use Illuminate\Http\Request;
+use Exception;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use App\Repositories\Permission\PermissionRepositoryInterface;
 
 class PermissionRepository implements PermissionRepositoryInterface {
-    public function getPermissions() {
+    public function index() {
         return Permission::all();
     }
 
@@ -14,22 +14,27 @@ class PermissionRepository implements PermissionRepositoryInterface {
         return Permission::create($permission);
     }
 
-    public function getPermissionsById($id) {
-        return Permission::find($id);
-    }
-
-    public function getRoles() {
-        return Role::with('permissions')->get();
-    }
-
-    public function deletePermissionsById($id) {
+    public function show($id) {
         $permission = Permission::find($id);
+        if(!$permission) {
+            throw new Exception("Permission Not Found", 404);
+        }
+        return $permission;
+    }
+
+    public function update($validatedData, $id) {
+        $permission = Permission::find($id);
+        if(!$permission) {
+            throw new Exception("Permission Not Found", 404);
+        }
+        return $permission->update($validatedData);
+    }
+
+    public function delete($id) {
+        $permission = Permission::find($id);
+        if(!$permission) {
+            throw new Exception("Permission Not Found", 404);
+        }
         return $permission->delete();
     }
-
-    // public function unassignPermissionsByRole($id) {
-
-    //     $permission = Permission::where('role_id', $id)->first();
-    //     $permission->delete()->where()
-    // }
 }

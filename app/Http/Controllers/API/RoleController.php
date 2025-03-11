@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleRequest;
 use App\Repositories\Role\RoleRepositoryInterface;
-use Illuminate\Http\Request;
+use Exception;
 
 class RoleController extends BaseController
 {
     /**
      * Display a listing of the resource.
      */
-    private $roleRepo;
-    public function __construct(RoleRepositoryInterface $roleRepo)
+    private $roleRepository;
+
+    public function __construct(RoleRepositoryInterface $roleRepository)
     {
-        $this->roleRepo = $roleRepo;
+        $this->roleRepository = $roleRepository;
     }
+
     public function index()
     {
-        $role = $this->roleRepo->getRoles();
+        $role = $this->roleRepository->index();
         return $this->success($role, "Roles retrieved successfully", 200);
     }
 
@@ -29,7 +30,7 @@ class RoleController extends BaseController
     public function store(RoleRequest $request)
     {
         $validatedData = $request->validated();
-        $role = $this->roleRepo->create($validatedData);
+        $role = $this->roleRepository->create($validatedData);
         return $this->success($role, "Role created successfully", 201);
     }
 
@@ -38,8 +39,12 @@ class RoleController extends BaseController
      */
     public function show(string $id)
     {
-        $role = $this->roleRepo->getRoleById($id);
-        return $this->success($role, "Role Details", 200);
+        try {
+            $role = $this->roleRepository->show($id);
+            return $this->success($role, "Role Details", 200);
+        }catch (Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 404);
+        }
     }
 
     /**
@@ -48,9 +53,12 @@ class RoleController extends BaseController
     public function update(RoleRequest $request, string $id)
     {
         $validatedData = $request->validated();
-        $role = $this->roleRepo->getRoleById($id);
-        $role->update($validatedData);
-        return $this->success($role, "Role updated successfully", 204);
+        try {
+            $role = $this->roleRepository->update($validatedData, $id, $request);
+            return $this->success($role, "Role updated successfully", 200);
+        }catch (Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 404);
+        }
     }
 
     /**
@@ -58,7 +66,11 @@ class RoleController extends BaseController
      */
     public function destroy(string $id)
     {
-        $role = $this->roleRepo->deleteRolesById($id);
-        return $this->success($role, "Role deleted successfully", 204);
+        try {
+            $role = $this->roleRepository->delete($id);
+            return $this->success($role, "Role deleted successfully", 204);
+        }catch(Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 404);
+        }
     }
 }

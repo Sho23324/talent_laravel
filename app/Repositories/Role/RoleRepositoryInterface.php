@@ -2,9 +2,9 @@
 namespace App\Repositories\Role;
 
 interface RoleRepositoryInterface {
-    public function getRoles();
-    public function getRoleById($id);
+    public function index();
+    public function show($id);
     public function create($role);
-    public function getRolePermissions();
-    public function deleteRolesById($id);
+    public function update($validatedData, $id, $request);
+    public function delete($id);
 }

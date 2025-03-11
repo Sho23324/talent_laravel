@@ -25,7 +25,8 @@ class UserUpdateRequest extends FormRequest
             'name'=>'required',
             'address'=>'required',
             'phone'=>'required',
-            'gender'=>'required'
+            'gender'=>'required',
+            'status'=>'required'
         ];
     }
 }
