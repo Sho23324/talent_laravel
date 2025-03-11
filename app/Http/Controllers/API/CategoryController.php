@@ -3,41 +3,54 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Requests\CategoryCreateRequest;
-use App\Models\Category;
 use App\Repositories\Category\CategoryRepositoryInterface;
+use Exception;
 
 class CategoryController extends BaseController
 {
-    private $categoryRepo;
-    public function __construct(CategoryRepositoryInterface $categoryRepo)
+    private $categoryRepository;
+
+    public function __construct(CategoryRepositoryInterface $categoryRepository)
     {
-        $this->categoryRepo = $categoryRepo;
+        $this->categoryRepository = $categoryRepository;
     }
+
     public function index() {
-        $categories = $this->categoryRepo->getCategories();
+        $categories = $this->categoryRepository->index();
         return $this->success($categories, "Success", 200);
     }
 
     public function show($id) {
-        $category = $this->categoryRepo->getCategoryById($id);
-        return $this->success($category, "Category Details", 200);
+        try {
+            $category = $this->categoryRepository->show($id);
+            return $this->success($category, "Category Details", 200);
+        }catch(Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Category Not Found", null,  404);
+        }
     }
 
     public function store(CategoryCreateRequest $request) {
         $validatedData = $request->validated();
-        $category = $this->categoryRepo->create($validatedData);
+        $category = $this->categoryRepository->create($validatedData, $request);
         return $this->success($category, "Product created successfully", 201);
     }
 
     public function update(CategoryCreateRequest $request, $id) {
         $validatedData = $request->validated();
-        $category = $this->categoryRepo->getCategoryById($id);
-        $category->update($validatedData);
-        return $this->success($category, "Category updated successfully", 204);
+        try {
+            $category = $this->categoryRepository->update($validatedData, $request, $id);
+            return $this->success($category, "Category updated successfully", 200);
+        }catch(Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Category Not Found", null, 404);
+        }
     }
 
     public function delete($id) {
-        $category = $this->categoryRepo->delete($id);
-        return $this->success($category, "Category delete successfully");
+        try {
+            $category = $this->categoryRepository->delete($id);
+            return $this->success($category, "Category delete successfully");
+        }catch(Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Category Not Found", null, 404);
+        }
     }
 }

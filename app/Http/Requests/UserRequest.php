@@ -25,10 +25,11 @@ class UserRequest extends FormRequest
             'name'=>'required',
             'email'=>'required|unique:users,email',
             'password'=>'required|min:8',
+            'password_confirmation'=>'required|same:password',
             'address'=>'required',
             'phone'=>'required',
             'gender'=>'required',
-            'role'=>'required'
+            'role'=>'required|exists:roles,name'
         ];
     }
 }

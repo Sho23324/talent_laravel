@@ -1,7 +1,6 @@
 <?php
 namespace App\Services\Product;
 
-use App\Models\ProductImage;
 use App\Repositories\Product\ProductRepositoryInterface;
 
 class ProductService {
@@ -13,16 +12,12 @@ class ProductService {
     }
 
     public function status($id) {
-        $product = $this->productRepo->getProductById($id);
+        $product = $this->productRepo->show($id);
         if($product->status == 1) {
             $product->status = 0;
         }else {
             $product->status = 1;
         }
         $product->save();
-    }
-
-    public function storeImg($request) {
-        return ProductImage::create($request);
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\PermissionRequest;
 use App\Repositories\Permission\PermissionRepositoryInterface;
 use App\Repositories\Role\RoleRepositoryInterface;
+use Exception;
 use Illuminate\Http\Request;
 
 class PermissionController extends BaseController
@@ -13,16 +13,18 @@ class PermissionController extends BaseController
     /**
      * Display a listing of the resource.
      */
-    private $permissionRepo;
-    private $roleRepo;
-    public function __construct(PermissionRepositoryInterface $permissionRepo, RoleRepositoryInterface $roleRepo)
+    private $permissionRepository;
+    private $roleRepository;
+
+    public function __construct(PermissionRepositoryInterface $permissionRepository, RoleRepositoryInterface $roleRepository)
     {
-        $this->permissionRepo = $permissionRepo;
-        $this->roleRepo = $roleRepo;
+        $this->permissionRepository = $permissionRepository;
+        $this->roleRepository = $roleRepository;
     }
+
     public function index()
     {
-        $permissions = $this->permissionRepo->getPermissions();
+        $permissions = $this->permissionRepository->index();
         return $this->success($permissions, "Permissions retrieved successfully", 200);
     }
 
@@ -31,8 +33,11 @@ class PermissionController extends BaseController
      */
     public function store(PermissionRequest $request)
     {
+
         $validatedData = $request->validated();
-        $permission = $this->permissionRepo->create($validatedData);
+
+        $permission = $this->permissionRepository->create($validatedData);
+
         return $this->success($permission, "Permission created successfully", 201);
     }
 
@@ -41,8 +46,12 @@ class PermissionController extends BaseController
      */
     public function show(string $id)
     {
-        $permission = $this->permissionRepo->getPermissionsById($id);
-        return $this->success($permission, "Permissoin Details", 200);
+        try {
+            $permission = $this->permissionRepository->show($id);
+            return $this->success($permission, "Permissoin Details", 200);
+        }catch(Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 404);
+        }
     }
 
     /**
@@ -50,10 +59,13 @@ class PermissionController extends BaseController
      */
     public function update(PermissionRequest $request, string $id)
     {
-        $validatedData = $request->validated();
-        $permission = $this->permissionRepo->getPermissionsById($id);
-        $permission->update($validatedData);
-        return $this->success($permission, "Permission updated successfully", 204);
+        try {
+            $validatedData = $request->validated();
+            $permission = $this->permissionRepository->update($validatedData, $id);
+            return $this->success($permission, "Permission updated successfully", 200);
+        }catch(Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 404);
+        }
     }
 
     /**
@@ -61,22 +73,26 @@ class PermissionController extends BaseController
      */
     public function destroy(string $id)
     {
-        $permission = $this->permissionRepo->deletePermissionsById($id);
-        return $this->success($permission, "Permission deleted successfully", 204);
+        try {
+            $permission = $this->permissionRepository->delete($id);
+            return $this->success($permission, "Permission deleted successfully", 204);
+        }catch(Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 404);
+        }
     }
 
-    public function assignPermissions(Request $request) {
-        $role = $this->roleRepo->getRoleById($request->role);
+    public function assignPermissions(Request $request, $id) {
+        $role = $this->roleRepository->show($id);
         $permissions = $request->permission;
         foreach($permissions as $permission) {
-            $permissions = $this->permissionRepo->getPermissionsById($permission);
+            $permissions = $this->permissionRepository->show($permission);
             $role->givePermissionTo([$permissions->name]);
         }
         return $this->success(null, "Permissions assigned susccessfully", 204);
     }
 
     public function unassignPermissions(Request $request, $id) {
-        $role = $this->roleRepo->getRoleById($id);
+        $role = $this->roleRepository->show($id);
         $permissions = $request->permission;
         foreach($permissions as $permission) {
             $role->revokePermissionTo($permission);

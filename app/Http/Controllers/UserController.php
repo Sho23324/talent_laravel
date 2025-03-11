@@ -4,26 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UserUpdateRequest;
-use App\Models\User;
 use App\Repositories\User\UserRepositoryInterface;
-use Illuminate\Contracts\Support\ValidatedData;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    private $userRepo;
-    public function __construct(UserRepositoryInterface $userRepo)
+    private $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->middleware('auth');
-        $this->userRepo = $userRepo;
+        $this->userRepository = $userRepository;
     }
+
     public function index()
     {
-        $users = $this->userRepo->getUsers();
+        $users = $this->userRepository->index();
         return view('user.index', compact('users'));
     }
 
@@ -41,12 +39,8 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $data = $request->validated();
-        $user = $this->userRepo->create($data);
-        if($data['role'] == 'admin') {
-            $user->assignRole('admin');
-        }else if($data['role'] == 'guest') {
-            $user->assignRole('guest');
-        }
+        $user = $this->userRepository->create($data);
+        $user->assignRole($data['role'] == 'admin' ? 'admin' : 'guest');
         return redirect()->route('users.index');
     }
 
@@ -55,7 +49,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $user = $this->userRepo->getUserById($id);
+        $user = $this->userRepository->show($id);
         return view('user.show', compact('user'));
     }
 
@@ -63,7 +57,7 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
-    {   $user = $this->userRepo->getUserById($id);
+    {   $user = $this->userRepository->show($id);
         return view('user.edit', compact('user'));
     }
 
@@ -73,19 +67,7 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, $id)
     {
         $validatedData = $request->validated();
-        $user = $this->userRepo->getUserById($id);
-        if($request->status == NULL) {
-            $status = false;
-        }else if($request->status == 'active') {
-            $status = true;
-        }
-        $user->update([
-            'name'=>$validatedData['name'],
-            'phone'=>$validatedData['phone'],
-            'address'=>$validatedData['address'],
-            'gender'=>$validatedData['gender'],
-            'status'=>$status
-        ]);
+        $this->userRepository->update($validatedData, $id);
         return redirect()->route('users.index');
     }
 
@@ -94,7 +76,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->userRepo->deleteUsersById($id);
+        $this->userRepository->delete($id);
         return redirect()->route('users.index');
     }
 }

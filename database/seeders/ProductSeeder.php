@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Product;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
@@ -21,7 +20,7 @@ class ProductSeeder extends Seeder
             ["category_id"=>1,"name"=>"Bottle", "description"=>"this is bottle", "price" => 600]
         ];
         foreach($products as $product) {
-             Product::create($product);
+            Product::create($product);
         }
     }
 }

@@ -5,22 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PermissionRequest;
 use App\Repositories\Permission\PermissionRepositoryInterface;
 
-
-
 class PermissionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    private $permissionRepo;
-    public function __construct(PermissionRepositoryInterface $permissionRepo)
+    private $permissionRepository;
+
+    public function __construct(PermissionRepositoryInterface $permissionRepository)
     {
         $this->middleware('auth');
-        $this->permissionRepo = $permissionRepo;
+        $this->permissionRepository = $permissionRepository;
     }
+
     public function index()
     {
-        $permissions = $this->permissionRepo->getPermissions();
+        $permissions = $this->permissionRepository->index();
         return view('permission.index', compact('permissions'));
     }
 
@@ -38,7 +38,7 @@ class PermissionController extends Controller
     public function store(PermissionRequest $request)
     {
         $validatedData = $request->validated();
-        $this->permissionRepo->create($validatedData);
+        $this->permissionRepository->create($validatedData);
         return redirect()->route('permissions.index');
     }
 
@@ -47,7 +47,7 @@ class PermissionController extends Controller
      */
     public function show(string $id)
     {
-        $permission = $this->permissionRepo->getPermissionsById($id);
+        $permission = $this->permissionRepository->show($id);
         return view('permission.show', compact('permission'));
     }
 
@@ -56,7 +56,7 @@ class PermissionController extends Controller
      */
     public function edit(string $id)
     {
-        $permission = $this->permissionRepo->getPermissionsById($id);
+        $permission = $this->permissionRepository->show($id);
         $roles = $permission->roles->pluck('name')->toArray();
         return view('permission.edit', compact('permission', 'roles'));
     }
@@ -66,9 +66,8 @@ class PermissionController extends Controller
      */
     public function update(PermissionRequest $request, string $id)
     {
-        $permission = $this->permissionRepo->getPermissionsById($id);
         $validatedData = $request->validated();
-        $permission->update($validatedData);
+        $this->permissionRepository->update($validatedData, $id);
         return redirect()->route('permissions.index');
     }
 
@@ -77,7 +76,7 @@ class PermissionController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->permissionRepo->deletePermissionsById($id);
+        $this->permissionRepository->delete($id);
         return redirect()->route('permissions.index');
     }
 }

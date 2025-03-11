@@ -2,8 +2,9 @@
 namespace App\Repositories\User;
 
 interface UserRepositoryInterface {
-    public function getUsers();
-    public function getUserById($id);
+    public function index();
+    public function show($id);
     public function create($data);
-    public function deleteUsersById($id);
+    public function update($validatedData, $id);
+    public function delete($id);
 }

@@ -11,11 +11,13 @@ class ProductImageController extends Controller
     /**
      * Display a listing of the resource.
      */
-    private $productImageRepo;
-    public function __construct(ProductImageRepositoryInterface $productImageRepo)
+    private $productImageRepository;
+
+    public function __construct(ProductImageRepositoryInterface $productImageRepository)
     {
-        $this->productImageRepo = $productImageRepo;
+        $this->productImageRepository = $productImageRepository;
     }
+
     public function index()
     {
         //
@@ -35,7 +37,7 @@ class ProductImageController extends Controller
     public function store(ProductImageRequest $request)
     {
         $validatedData = $request->validated();
-        $this->productImageRepo->create($validatedData);
+        $this->productImageRepository->create($validatedData, $request);
         return redirect()->route('products.index');
     }
 

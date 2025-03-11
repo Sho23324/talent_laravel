@@ -2,22 +2,30 @@
 
 namespace App\Repositories\ProductImage;
 
-use App\Http\Requests\ProductImageRequest;
 use App\Models\Product;
 use App\Models\ProductImage;
+use Exception;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\ProductImage\ProductImageRepositoryInterface;
 
 class ProductImageRepository implements ProductImageRepositoryInterface{
-    public function getProductImages() {
+    public function index() {
         return ProductImage::all();
     }
 
-    public function create($request) {
-        return ProductImage::create($request);
+    public function create($validatedData, $request) {
+        $imageName = time(). '.' . $request->image->extension();
+        $request->image->move(public_path('productImage'), $imageName);
+        $validatedData = array_merge($validatedData, ['image'=>$imageName]);
+        return ProductImage::create($validatedData);
     }
 
-    public function getProductImageById($id) {
-        return ProductImage::find($id);
+    public function show($id) {
+        $productImage = ProductImage::find($id);
+        if(!$productImage) {
+            throw new Exception("ProductImage Not Found", 404);
+        }
+        return $productImage;
     }
 
     public function getProductImageByProductId($id) {
@@ -26,6 +34,9 @@ class ProductImageRepository implements ProductImageRepositoryInterface{
 
     public function delete($id) {
         $productImage = ProductImage::find($id);
+        if(!$productImage) {
+            throw new Exception("ProductImage Not Found", 404);
+        }
         $image = public_path('productImage/') . $productImage->image;
         Storage::delete($image);
         unlink($image);

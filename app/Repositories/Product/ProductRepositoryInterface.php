@@ -2,11 +2,11 @@
 namespace App\Repositories\Product;
 
 interface ProductRepositoryInterface {
-    public function getProducts();
-    public function getProductById($product_id) ;
+    public function index();
+    public function show($id) ;
     public function create($product);
     public function getCategoryProduct($id);
-    public function getActiveProducts();
-    public function deleteProductsById($id);
+    public function update($validatedData, $id);
+    public function delete($id);
     public function getProductImagesByProductId($id);
 }

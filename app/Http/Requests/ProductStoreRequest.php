@@ -22,10 +22,9 @@ class ProductStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id'=>'required',
+            'category_id'=>'required|exists:categories,id',
             'name'=>'required',
             'description'=>'required',
-            'status'=>'required',
             'price'=>'required|int',
         ];
     }

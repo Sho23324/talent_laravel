@@ -2,16 +2,26 @@
 namespace App\Repositories\Product;
 
 use App\Models\Product;
-use App\Models\ProductImage;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use App\Repositories\Product\ProductRepositoryInterface;
 
 class ProductRepository implements ProductRepositoryInterface {
-    public function getProducts() {
-        $products = Product::all();
+    public function index() {
+        $roleName = Auth::user()->roles->pluck('name');
+        if ($roleName->contains('admin')) {
+            $products = Product::all();
+        } elseif($roleName->contains('guest')){
+            $products = Product::where('status', 1)->get();
+        }
         return $products;
     }
 
-    public function getProductById($product_id) {
-        $product = Product::find($product_id);
+    public function show($id) {
+        $product = Product::find($id);
+        if(!$product) {
+            throw new Exception("Product Not Found", 404);
+        }
         return $product;
     }
 
@@ -23,16 +33,23 @@ class ProductRepository implements ProductRepositoryInterface {
         return Product::with('category')->where('id', $id)->first();
     }
 
-    public function getActiveProducts() {
-        return Product::where('status', 1)->get();
-    }
-
     public function getProductImagesByProductId($id) {
         return Product::with('images')->where('id', $id)->first();
     }
 
-    public function deleteProductsById($id) {
+    public function update($validatedData, $id) {
         $product = Product::find($id);
+        if(!$product) {
+            throw new Exception("Product Not Found", 404);
+        }
+        return $product->update($validatedData);
+    }
+
+    public function delete($id) {
+        $product = Product::find($id);
+        if(!$product) {
+            throw new Exception("Product Not Found", 404);
+        }
         return $product->delete();
     }
 }
