@@ -32,8 +32,8 @@ class UserRepository implements UserRepositoryInterface{
             'phone'=>$validatedData['phone'],
             'address'=>$validatedData['address'],
             'gender'=>$validatedData['gender'],
-            'status'=>$validatedData->status == 'active' ? true : false,
-        ]);;
+            // 'status'=>$validatedData->status == 'active' ? true : false,
+        ]);
     }
 
     public function delete($id) {

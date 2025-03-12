@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 use App\Http\Requests\ProductImageRequest;
+use App\Http\Resources\ProductImageResource;
 use App\Repositories\ProductImage\ProductImageRepositoryInterface;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,7 +22,8 @@ class ProductImageController extends BaseController
     public function index()
     {
         $productImages = $this->productImageRepository->index();
-        return $this->success($productImages, "Product images retrieved successfully", 200);
+        $data = ProductImageResource::collection($productImages);
+        return $this->success($data, "Product images retrieved successfully", 200);
     }
 
     /**
@@ -41,18 +43,11 @@ class ProductImageController extends BaseController
     {
         try {
             $productImages = $this->productImageRepository->show($id);
-            return $this->success($productImages, "Product images by product id", 200);
+            $data = new ProductImageResource($productImages);
+            return $this->success($data, "Product images by product id", 200);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**
@@ -64,7 +59,7 @@ class ProductImageController extends BaseController
             $productImage = $this->productImageRepository->delete($id);
             return $this->success($productImage, "Product image deleted successfully", 204);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
     }
 }

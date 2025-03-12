@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Requests\RoleRequest;
+use App\Http\Resources\RoleResource;
 use App\Repositories\Role\RoleRepositoryInterface;
 use Exception;
 
@@ -21,7 +22,8 @@ class RoleController extends BaseController
     public function index()
     {
         $role = $this->roleRepository->index();
-        return $this->success($role, "Roles retrieved successfully", 200);
+        $data = RoleResource::collection($role);
+        return $this->success($data, "Roles retrieved successfully", 200);
     }
 
     /**
@@ -41,9 +43,10 @@ class RoleController extends BaseController
     {
         try {
             $role = $this->roleRepository->show($id);
-            return $this->success($role, "Role Details", 200);
+            $data = new RoleResource($role);
+            return $this->success($data, "Role Details", 200);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
     }
 
@@ -57,7 +60,7 @@ class RoleController extends BaseController
             $role = $this->roleRepository->update($validatedData, $id, $request);
             return $this->success($role, "Role updated successfully", 200);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
     }
 
@@ -70,7 +73,7 @@ class RoleController extends BaseController
             $role = $this->roleRepository->delete($id);
             return $this->success($role, "Role deleted successfully", 204);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Role Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
     }
 }

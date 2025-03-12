@@ -17,7 +17,6 @@ class CategoryRepository implements CategoryRepositoryInterface {
             throw new Exception("Category not found", 404);
         }
         return $category;
-
     }
 
     public function create($validatedData, $request) {
@@ -42,9 +41,7 @@ class CategoryRepository implements CategoryRepositoryInterface {
             $request->image->move(public_path('categoryImage'), $imageName);
             $validatedData = array_merge($validatedData, ['image'=>$imageName]);
         }
-
-        $category->update($validatedData);
-        return redirect()->route('category.list');
+        return $category->update($validatedData);
     }
 
     public function delete($id) {
@@ -56,6 +53,5 @@ class CategoryRepository implements CategoryRepositoryInterface {
         Storage::delete($image);
         unlink($image);
         return $category->delete();
-
     }
 }

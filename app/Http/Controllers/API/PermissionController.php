@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Requests\PermissionRequest;
+use App\Http\Resources\PermissionResource;
 use App\Repositories\Permission\PermissionRepositoryInterface;
 use App\Repositories\Role\RoleRepositoryInterface;
 use Exception;
@@ -25,7 +26,8 @@ class PermissionController extends BaseController
     public function index()
     {
         $permissions = $this->permissionRepository->index();
-        return $this->success($permissions, "Permissions retrieved successfully", 200);
+        $data = PermissionResource::collection($permissions);
+        return $this->success($data, "Permissions retrieved successfully", 200);
     }
 
     /**
@@ -35,7 +37,8 @@ class PermissionController extends BaseController
     {
         $validatedData = $request->validated();
         $permission = $this->permissionRepository->create($validatedData);
-        return $this->success($permission, "Permission created successfully", 201);
+        $data = new PermissionResource($permission);
+        return $this->success($data, "Permission created successfully", 201);
     }
 
     /**
@@ -45,9 +48,10 @@ class PermissionController extends BaseController
     {
         try {
             $permission = $this->permissionRepository->show($id);
-            return $this->success($permission, "Permissoin Details", 200);
+            $data = new PermissionResource($permission);
+            return $this->success($data, "Permissoin Details", 200);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
     }
 
@@ -61,7 +65,7 @@ class PermissionController extends BaseController
             $permission = $this->permissionRepository->update($validatedData, $id);
             return $this->success($permission, "Permission updated successfully", 200);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
     }
 
@@ -74,26 +78,34 @@ class PermissionController extends BaseController
             $permission = $this->permissionRepository->delete($id);
             return $this->success($permission, "Permission deleted successfully", 204);
         }catch(Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
     }
 
     public function assignPermissions(Request $request, $id) {
-        $role = $this->roleRepository->show($id);
-        $permissions = $request->permission;
-        foreach($permissions as $permission) {
-            $permissions = $this->permissionRepository->show($permission);
-            $role->givePermissionTo([$permissions->name]);
+        try {
+            $role = $this->roleRepository->show($id);
+            $permissions = $request->permission;
+            foreach($permissions as $permission) {
+                $permissions = $this->permissionRepository->show($permission);
+                $role->givePermissionTo([$permissions->name]);
+            }
+            return $this->success(null, "Permissions assigned susccessfully", 204);
+        }catch(Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
-        return $this->success(null, "Permissions assigned susccessfully", 204);
     }
 
     public function unassignPermissions(Request $request, $id) {
-        $role = $this->roleRepository->show($id);
-        $permissions = $request->permission;
-        foreach($permissions as $permission) {
-            $role->revokePermissionTo($permission);
+        try {
+            $role = $this->roleRepository->show($id);
+            $permissions = $request->permission;
+            foreach($permissions as $permission) {
+                $role->revokePermissionTo($permission);
+            }
+            return $this->success(null, "Permissions unassigned susccessfully", 204);
+        }catch(Exception $e) {
+            return $this->error($e->getMessage() ? $e->getMessage() : "Permission Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
-        return $this->success(null, "Permissions unassigned susccessfully", 204);
     }
 }

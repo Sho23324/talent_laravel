@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Requests\ProductStoreRequest;
+use App\Http\Resources\ProductResource;
 use App\Repositories\Product\ProductRepositoryInterface;
 use Exception;
 
@@ -17,15 +18,17 @@ class ProductController extends BaseController
 
     public function index() {
         $products = $this->productRepository->index();
-        return $this->success($products, 'Products retrieved successsfully', 200);
+        $data = ProductResource::collection($products);
+        return $this->success($data, 'Products retrieved successsfully', 200);
     }
 
     public function show($id) {
         try {
             $product = $this->productRepository->show($id);
-            return $this->success($product, 'Product Details', 200);
+            $data = new ProductResource($product);
+            return $this->success($data, 'Product Details', 200);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
     }
 
@@ -35,7 +38,7 @@ class ProductController extends BaseController
             $product = $this->productRepository->create($validatedData);
             return $this->success($product, 'Product Created Successfully', 201);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
     }
 
@@ -45,7 +48,7 @@ class ProductController extends BaseController
             $product = $this->productRepository->update($validatedData, $id);
             return $this->success($product, "Product Updated Successfully", 200);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, $e->getCode() ? $e->getCode() : 500);
         }
     }
 
@@ -54,7 +57,7 @@ class ProductController extends BaseController
             $product = $this->productRepository->show($id);
             return $this->success($product, "Product delete Successful", 204);
         }catch (Exception $e) {
-            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, 500);
+            return $this->error($e->getMessage() ? $e->getMessage() : "Product Not Found", null, $e->getMessage() ? $e->getCode() : 500);
         }
     }
 
