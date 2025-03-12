@@ -5,7 +5,6 @@ use App\Http\Requests\ProductImageRequest;
 use App\Http\Resources\ProductImageResource;
 use App\Repositories\ProductImage\ProductImageRepositoryInterface;
 use Exception;
-use Illuminate\Http\Request;
 
 class ProductImageController extends BaseController
 {
